@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow Solutions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding-top: 70px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+        .login-container, .dashboard {
+            display: none;
+        }
+        .login-container.active, .dashboard.active {
+            display: block;
+        }
+        .login-box {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .login-box h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .password-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-container input {
+            width: 100%;
+            padding-right: 50px;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+        .password-container button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .password-container button:hover {
+            background-color: #0056b3;
+        }
+        .toggleBtn {
+            border-radius: 50%;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .login-box button:hover {
+            background-color: #0056b3;
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 15px 20px;
+            background-color: #007bff;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+        .logo-container {
+            position: absolute;
+            left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .logo-container img {
+            height: 40px;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #007bff;
+            color: white;
+            position: relative;
+            width: 100%;
+            bottom: 0;
+            margin-top: auto;
+        }
+        .dashboard h2 {
+            text-align: center;
+            margin-top: 0;
+        }
+        .dashboard ul {
+            list-style: none;
+            padding: 0;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        .dashboard ul li {
+            background-color: #fff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .task-list {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        .task-list li {
+            background-color: #f8f9fa;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-direction: column;
+        }
+        .task-list button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .task-list button:hover {
+            background-color: #218838;
+        }
+        .admin-task-form {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        .admin-task-form input, .admin-task-form select, .admin-task-form textarea, .admin-task-form button {
+            width: 100%;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .admin-task-form button {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .admin-task-form button:hover {
+            background-color: #218838;
+        }
+        .btn-logout {
+            display: block;
+            max-width: 200px;
+            margin: 20px auto;
+            padding: 12px;
+            background-color: #dc3545;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .delete-task {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .delete-task:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <img src="https://api.logo.com/api/v2/images?design=logo_f7d20eb0-6664-44a6-bdca-7317f9efa1fa&u=2024-09-12T14%3A18%3A35.250Z&format=svg&margins=166&width=1000&height=750&fit=contain" alt="Logo">
+        </div>
+        <div class="title">TaskFlow Solutions</div>
+    </div>
+    <div class="container">
+        <div class="login-container active" id="login-container">
+            <div class="login-box">
+                <h2>Login</h2>
+                <input type="text" id="email" placeholder="Email" required>
+                <div class="password-container">
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                <button onclick="login()">Login</button>
+            </div>
+        </div>
+        <div class="dashboard" id="admin-dashboard">
+            <h2>Admin Dashboard</h2>
+            <h3>Assign Tasks to Employees</h3>
+            <form class="admin-task-form" id="taskForm">
+                <input type="text" id="taskTitle" placeholder="Task Title" required>
+                <textarea id="taskDescription" placeholder="Task Description" rows="3" required></textarea>
+                <input type="date" id="dueDate" placeholder="Due Date" required>
+                <select id="employeeSelect" required>
+                    <option value="" disabled selected>Select Employee</option>
+                </select>
+                <button type="submit">Assign Task</button>
+            </form>
+            <h3>Employee Tasks</h3>
+            <ul class="employee-list" id="employee-list"></ul>
+            <div class="btn-logout" onclick="logout()">Logout</div>
+        </div>
+        <div class="dashboard" id="employee-dashboard">
+            <h2>Employee Dashboard</h2>
+            <h3>Your Tasks</h3>
+            <ul class="task-list" id="task-list"></ul>
+            <div class="btn-logout" onclick="logout()">Logout</div>
+        </div>
+    </div>
+    <div class="footer">
+        &copy; 2024 TaskFlow Solutions. All Rights Reserved.<br>
+        <strong>Admin:</strong> admin@taskflow.com | Password: admin123 <br>
+        <strong>Employee 1:</strong> employee1@taskflow.com | Password: employee123 <br>
+        <strong>Employee 2:</strong> employee2@taskflow.com | Password: employee123
+    </div>
+    <script>
+        const users = {
+            admin: { email: "admin@taskflow.com", password: "admin123", role: "admin" },
+            employee1: { email: "employee1@taskflow.com", password: "employee123", role: "employee", tasks: [] },
+            employee2: { email: "employee2@taskflow.com", password: "employee123", role: "employee", tasks: [] }
+        };
+
+        function login() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const user = Object.values(users).find(u => u.email === email && u.password === password);
+            if (user) {
+                localStorage.setItem('user', JSON.stringify(user));
+                showDashboard(user.role);
+            } else {
+                alert("Invalid login credentials.");
+            }
+        }
+
+        function showDashboard(role) {
+            document.getElementById("login-container").classList.remove("active");
+            if (role === "admin") {
+                document.getElementById("admin-dashboard").classList.add("active");
+                displayEmployees();
+                setupTaskForm();
+            } else {
+                document.getElementById("employee-dashboard").classList.add("active");
+                displayTasks();
+            }
+        }
+
+        function displayTasks() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const taskList = document.getElementById("task-list");
+            taskList.innerHTML = "";
+            user.tasks.forEach((task, index) => {
+                const li = document.createElement("li");
+                li.innerHTML = `<div><strong>${task.title}</strong><br>Description: ${task.description}<br>Due: ${task.dueDate}</div>
+                                <button onclick="completeTask(${index})">Complete</button>`;
+                taskList.appendChild(li);
+            });
+        }
+
+        function displayEmployees() {
+            const employeeList = document.getElementById("employee-list");
+            const employeeSelect = document.getElementById("employeeSelect");
+            employeeList.innerHTML = "";
+            employeeSelect.innerHTML = "<option value='' disabled selected>Select Employee</option>";
+            Object.keys(users).forEach(userKey => {
+                const user = users[userKey];
+                if (user.role === "employee") {
+                    const li = document.createElement("li");
+                    li.innerHTML = `<strong>${user.email}</strong><ul class="task-list">`;
+                    user.tasks.forEach((task, index) => {
+                        const taskItem = document.createElement("li");
+                        taskItem.innerHTML = `<div><strong>${task.title}</strong><br>Description: ${task.description}<br>Due: ${task.dueDate}</div>
+                            <button class="delete-task" onclick="deleteTask('${userKey}', ${index})">Delete</button>`;
+                        li.appendChild(taskItem);
+                    });
+                    li.innerHTML += '</ul>';
+                    employeeList.appendChild(li);
+                    const option = document.createElement("option");
+                    option.value = userKey;
+                    option.textContent = user.email;
+                    employeeSelect.appendChild(option);
+                }
+            });
+        }
+
+        function setupTaskForm() {
+            const form = document.getElementById("taskForm");
+            form.onsubmit = (e) => {
+                e.preventDefault();
+                const taskTitle = document.getElementById("taskTitle").value;
+                const taskDescription = document.getElementById("taskDescription").value;
+                const dueDate = document.getElementById("dueDate").value;
+                const employeeKey = document.getElementById("employeeSelect").value;
+                if (employeeKey && taskTitle && taskDescription && dueDate) {
+                    users[employeeKey].tasks.push({ title: taskTitle, description: taskDescription, dueDate });
+                    alert("Task assigned successfully!");
+                    form.reset();
+                    displayEmployees();
+                }
+            };
+        }
+
+        function completeTask(index) {
+            const user = JSON.parse(localStorage.getItem('user'));
+            user.tasks.splice(index, 1);
+            localStorage.setItem('user', JSON.stringify(user));
+            displayTasks();
+        }
+
+        function deleteTask(employeeKey, taskIndex) {
+            users[employeeKey].tasks.splice(taskIndex, 1);
+            alert("Task deleted successfully!");
+            displayEmployees();
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            document.getElementById("login-container").classList.add("active");
+            document.getElementById("admin-dashboard").classList.remove("active");
+            document.getElementById("employee-dashboard").classList.remove("active");
+        }
+
+        window.onload = () => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user) {
+                showDashboard(user.role);
+            }
+        };
+    </script>
+</body>
+</html>
